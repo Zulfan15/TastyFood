@@ -1,0 +1,302 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { formatDistance } from "@/lib/helpers";
+import { Clock, MapPin, User, Package } from "lucide-react";
+
+// Dynamic import untuk seluruh MapComponent
+const DynamicMap = dynamic(() => import("./map-component"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-full bg-gray-100 animate-pulse rounded flex items-center justify-center">
+      <div className="text-gray-500">Loading map...</div>
+    </div>
+  ),
+});
+
+interface Donation {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  quantity: number;
+  unit: string;
+  images: string[];
+  address: string;
+  pickupTimeStart: string;
+  pickupTimeEnd: string;
+  expiryTime: string;
+  status: string;
+  locationPoint: string;
+  donor: {
+    id: string;
+    name: string;
+    avatar?: string;
+    trustScore: string;
+  };
+  createdAt: string;
+}
+
+interface MapViewProps {
+  userLocation: { lat: number; lng: number } | null;
+  donations: Donation[];
+  onDonationSelect: (donation: Donation) => void;
+  onRequestDonation: (donationId: string) => void;
+}
+
+export function MapView({ userLocation, donations, onDonationSelect, onRequestDonation }: MapViewProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="w-full h-[500px] bg-gray-100 rounded-lg flex items-center justify-center">
+        <p>Loading map...</p>
+      </div>
+    );
+  }
+
+  // Transform donations untuk map component
+  const transformedDonations = donations.map(donation => {
+    if (!donation.locationPoint) return null;
+    
+    try {
+      const pointStr = donation.locationPoint.toString();
+      const coords = pointStr.replace(/[()]/g, '').split(',');
+      const lng = parseFloat(coords[0]);
+      const lat = parseFloat(coords[1]);
+
+      return {
+        id: donation.id,
+        title: donation.title,
+        address: donation.address,
+        category: donation.category,
+        quantity: donation.quantity,
+        unit: donation.unit,
+        location: { lat, lng },
+        donor: {
+          name: donation.donor.name,
+          avatar: donation.donor.avatar,
+        },
+        createdAt: donation.createdAt,
+        expiresAt: donation.expiryTime,
+      };
+    } catch (error) {
+      console.log("Error parsing location:", error);
+      return null;
+    }
+  }).filter(Boolean);
+
+  return (
+    <div className="w-full h-[500px] rounded-lg overflow-hidden border">
+      <DynamicMap 
+        userLocation={userLocation}
+        donations={transformedDonations}
+        onRequestDonation={onRequestDonation}
+      />
+    </div>
+  );
+}
+}
+
+// Custom icon for donations
+const donationIcon = new Icon({
+  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiMxNkE0NkIiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgo8cGF0aCBkPSJNMjAuNSA2IDkgMTcuNWwtNS41LTUuNSIvPgo8L3N2Zz4KPC9zdmc+',
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+// Custom icon for user location
+const userIcon = new Icon({
+  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTIiIGZpbGw9IiMzQjgyRjYiLz4KPHN2ZyB4PSI2IiB5PSI2IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgo8cGF0aCBkPSJNMjAgMjF2LTJhNCA0IDAgMCAwLTQtNEg4YTQgNCAwIDAgMC00IDR2MiIvPgo8Y2lyY2xlIGN4PSIxMiIgY3k9IjciIHI9IjQiLz4KPC9zdmc+Cjwvc3ZnPg==',
+  iconSize: [24, 24],
+  iconAnchor: [12, 24],
+  popupAnchor: [0, -24],
+});
+
+function MapController({ center }: { center: LatLngExpression }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    map.setView(center, map.getZoom());
+  }, [center, map]);
+  
+  return null;
+}
+
+export function MapView({ userLocation, donations, onDonationSelect, onRequestDonation }: MapViewProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="w-full h-[500px] bg-gray-100 rounded-lg flex items-center justify-center">
+        <p>Loading map...</p>
+      </div>
+    );
+  }
+
+  const defaultCenter: LatLngExpression = userLocation ? [userLocation.lat, userLocation.lng] : [-6.2088, 106.8456]; // Jakarta
+
+  return (
+    <div className="w-full h-[500px] rounded-lg overflow-hidden border">
+      <MapContainer
+        center={defaultCenter}
+        zoom={13}
+        style={{ height: "100%", width: "100%" }}
+        zoomControl={true}
+      >
+        <MapController center={defaultCenter} />
+        
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+
+        {/* User location marker */}
+        {userLocation && (
+          <Marker position={[userLocation.lat, userLocation.lng]} icon={userIcon}>
+            <Popup>
+              <div className="text-center">
+                <p className="font-semibold">Your Location</p>
+              </div>
+            </Popup>
+          </Marker>
+        )}
+
+        {/* Donation markers */}
+        {donations.map((donation) => {
+          if (!donation.locationPoint) return null;
+          
+          try {
+            // Parse point format "(x, y)" to get coordinates
+            const pointStr = donation.locationPoint.toString();
+            const coords = pointStr.replace(/[()]/g, '').split(',');
+            const lng = parseFloat(coords[0]);
+            const lat = parseFloat(coords[1]);
+
+            return (
+              <Marker
+                key={donation.id}
+                position={[lat, lng]}
+                icon={donationIcon}
+                eventHandlers={{
+                  click: () => onDonationSelect(donation),
+                }}
+              >
+                <Popup>
+                  <DonationPopup 
+                    donation={donation} 
+                    onRequestDonation={onRequestDonation}
+                    userLocation={userLocation}
+                  />
+                </Popup>
+              </Marker>
+            );
+          } catch (error) {
+            console.log("Unable to parse location data");
+            return null;
+          }
+        })}
+      </MapContainer>
+    </div>
+  );
+}
+
+function DonationPopup({ 
+  donation, 
+  onRequestDonation, 
+  userLocation 
+}: { 
+  donation: Donation; 
+  onRequestDonation: (donationId: string) => void;
+  userLocation: { lat: number; lng: number } | null;
+}) {
+  const distance = userLocation && donation.locationPoint ? (() => {
+    try {
+      const pointStr = donation.locationPoint.toString();
+      const coords = pointStr.replace(/[()]/g, '').split(',');
+      const lng = parseFloat(coords[0]);
+      const lat = parseFloat(coords[1]);
+      
+      const R = 6371; // Earth's radius in kilometers
+      const dLat = ((lat - userLocation.lat) * Math.PI) / 180;
+      const dLon = ((lng - userLocation.lng) * Math.PI) / 180;
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos((userLocation.lat * Math.PI) / 180) *
+          Math.cos((lat * Math.PI) / 180) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    } catch {
+      return null;
+    }
+  })() : null;
+
+  return (
+    <Card className="w-80">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg">{donation.title}</CardTitle>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary">{donation.category}</Badge>
+          <Badge variant="outline">{donation.status}</Badge>
+        </div>
+      </CardHeader>
+      
+      <CardContent className="space-y-3">
+        <p className="text-sm text-gray-600 line-clamp-2">{donation.description}</p>
+        
+        <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1">
+            <Package className="h-4 w-4" />
+            <span>{donation.quantity} {donation.unit}</span>
+          </div>
+          {distance && (
+            <div className="flex items-center gap-1">
+              <MapPin className="h-4 w-4" />
+              <span>{formatDistance(distance)}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center gap-1 text-sm">
+          <Clock className="h-4 w-4" />
+          <span>
+            {new Date(donation.pickupTimeStart).toLocaleTimeString()} - {new Date(donation.pickupTimeEnd).toLocaleTimeString()}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <User className="h-4 w-4" />
+            <span className="text-sm">{donation.donor.name}</span>
+          </div>
+          <Badge variant="outline">⭐ {donation.donor.trustScore}</Badge>
+        </div>
+
+        <div className="pt-2">
+          <Button 
+            onClick={() => onRequestDonation(donation.id)}
+            className="w-full"
+            disabled={donation.status !== "available"}
+          >
+            {donation.status === "available" ? "Request Pickup" : "Not Available"}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

@@ -19,9 +19,13 @@ const parkinsans = Parkinsans({
 });
 
 export const metadata: Metadata = {
-  title: "Codeguide Starter Fullstack",
+  title: "FoodShare Platform - Reducing Food Waste Together",
   description:
-    "A modern Next.js starter with TypeScript, TailwindCSS, shadcn/ui, Better Auth, and Drizzle ORM",
+    "Connect food donors with receivers in your community. Share excess food, reduce waste, and help those in need within a 5km radius.",
+  icons: {
+    icon: "/foodshare-icon.svg",
+    apple: "/foodshare-icon.svg",
+  },
 };
 
 export default function RootLayout({

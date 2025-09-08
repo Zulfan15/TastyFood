@@ -24,15 +24,14 @@ export default function SignInPage() {
         setError("");
 
         try {
-            const result = await signIn.email({
-                email,
-                password,
-            });
-
-            if (result.error) {
-                setError(result.error.message || "Sign in failed");
-            } else {
+            // For demo purposes, simulate authentication
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Check demo credentials
+            if ((email === "donor@foodshare.demo" || email === "receiver@foodshare.demo") && password === "demo123") {
                 router.push("/dashboard");
+            } else {
+                setError("Invalid email or password. Use demo credentials.");
             }
         } catch (err) {
             setError("An unexpected error occurred");
@@ -45,9 +44,12 @@ export default function SignInPage() {
         <div className="min-h-screen flex items-center justify-center bg-background px-4">
             <Card className="w-full max-w-md">
                 <CardHeader className="text-center">
-                    <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
+                    <Link href="/" className="text-sm text-blue-600 hover:underline mb-2 inline-block">
+                        ← Back to Home
+                    </Link>
+                    <CardTitle className="text-2xl font-bold">Sign In to FoodShare</CardTitle>
                     <CardDescription>
-                        Enter your email and password to access your account
+                        Enter your credentials to access your account
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -57,6 +59,16 @@ export default function SignInPage() {
                                 <AlertDescription>{error}</AlertDescription>
                             </Alert>
                         )}
+                        
+                        {/* Demo Credentials Info */}
+                        <div className="bg-blue-50 p-3 rounded-lg text-sm">
+                            <h4 className="font-semibold mb-2 text-blue-800">Demo Credentials:</h4>
+                            <div className="space-y-1 text-blue-700">
+                                <div><strong>Donor:</strong> donor@foodshare.demo / demo123</div>
+                                <div><strong>Receiver:</strong> receiver@foodshare.demo / demo123</div>
+                            </div>
+                        </div>
+                        
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
