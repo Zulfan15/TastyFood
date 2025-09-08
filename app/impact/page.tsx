@@ -109,7 +109,7 @@ export default function ImpactPage() {
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-green-800 mb-2">Your Impact Dashboard</h1>
-          <p className="text-content-secondary">See how you're making a difference in fighting food waste</p>
+          <p className="text-content-secondary">See how you&apos;re making a difference in fighting food waste</p>
         </div>
 
         {/* Main Stats */}
@@ -191,7 +191,7 @@ export default function ImpactPage() {
                 <IconTrendingUp className="size-5 text-green-600" />
                 Monthly Goals
               </CardTitle>
-              <CardDescription>Track your progress towards this month's targets</CardDescription>
+              <CardDescription>Track your progress towards this month&apos;s targets</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {monthlyGoals.map((goal, index) => {

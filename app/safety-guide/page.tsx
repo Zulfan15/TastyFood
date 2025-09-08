@@ -150,8 +150,8 @@ export default function SafetyGuidePage() {
         <Alert className="mb-8 border-amber-200 bg-amber-50">
           <IconAlertTriangle className="size-4 text-amber-600" />
           <AlertDescription className="text-amber-800">
-            <strong>Important:</strong> Food safety is everyone's responsibility. When in doubt, don't donate. 
-            It's better to be safe than sorry when it comes to food safety.
+            <strong>Important:</strong> Food safety is everyone&apos;s responsibility. When in doubt, don&apos;t donate. 
+            It&apos;s better to be safe than sorry when it comes to food safety.
           </AlertDescription>
         </Alert>
 
@@ -222,13 +222,13 @@ export default function SafetyGuidePage() {
           </CardContent>
         </Card>
 
-        {/* Do's and Don'ts */}
+        {/* Do&apos;s and Don&apos;ts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="border-green-200 bg-green-50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-green-800">
                 <IconCheck className="size-5" />
-                Do's
+                Do&apos;s
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -254,18 +254,18 @@ export default function SafetyGuidePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-red-800">
                 <IconX className="size-5" />
-                Don'ts
+                Don&apos;ts
               </CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
                 {[
-                  "Don't donate expired or spoiled food",
-                  "Don't leave food unattended for long periods",
-                  "Don't mix different types of food",
-                  "Don't donate food you wouldn't eat yourself",
-                  "Don't ignore temperature requirements",
-                  "Don't donate food with unknown ingredients"
+                  "Don&apos;t donate expired or spoiled food",
+                  "Don&apos;t leave food unattended for long periods",
+                  "Don&apos;t mix different types of food",
+                  "Don&apos;t donate food you wouldn&apos;t eat yourself",
+                  "Don&apos;t ignore temperature requirements",
+                  "Don&apos;t donate food with unknown ingredients"
                 ].map((item, index) => (
                   <li key={index} className="flex items-start gap-2">
                     <IconX className="size-4 text-red-600 mt-0.5 flex-shrink-0" />

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { donations } from "@/db/schema/donations";
 import { users } from "@/db/schema/users";
-import { createDonationSchema, updateDonationSchema, searchDonationsSchema } from "@/lib/validations";
+import { createDonationSchema, searchDonationsSchema } from "@/lib/validations";
 import { calculateDistance } from "@/lib/helpers";
 import { eq, and, sql } from "drizzle-orm";
 
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
         .where(
           and(
             eq(donations.donorId, donorId),
-            status ? eq(donations.status, status as any) : undefined
+            status ? eq(donations.status, status as typeof donations.status.enumValues[number]) : undefined
           )
         )
         .orderBy(sql`${donations.createdAt} DESC`);
@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
       quantity: validatedData.quantity,
       unit: validatedData.unit,
       images: validatedData.images,
-      locationPoint: locationPoint as any,
+      locationPoint: { x: validatedData.longitude, y: validatedData.latitude },
       address: validatedData.address,
       pickupTimeStart: new Date(validatedData.pickupTimeStart),
       pickupTimeEnd: new Date(validatedData.pickupTimeEnd),

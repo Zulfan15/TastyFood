@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { Icon } from "leaflet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -104,7 +106,6 @@ export function MapView({ userLocation, donations, onDonationSelect, onRequestDo
     </div>
   );
 }
-}
 
 // Custom icon for donations
 const donationIcon = new Icon({
@@ -204,7 +205,7 @@ export function MapView({ userLocation, donations, onDonationSelect, onRequestDo
                 </Popup>
               </Marker>
             );
-          } catch (error) {
+          } catch (_error) {
             console.log("Unable to parse location data");
             return null;
           }

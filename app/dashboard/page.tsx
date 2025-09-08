@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CreateDonationInput } from "@/lib/validations";
-import { MapPin, Search, Filter, Plus, Package, Users, Clock, TrendingUp, MessageSquare } from "lucide-react";
+import { MapPin, Search, Filter, Package, Users, Clock, TrendingUp, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -41,7 +41,6 @@ export default function DashboardPage() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [donations, setDonations] = useState<Donation[]>([]);
   const [filteredDonations, setFilteredDonations] = useState<Donation[]>([]);
-  const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +61,7 @@ export default function DashboardPage() {
             lng: position.coords.longitude,
           });
         },
-        (error) => {
+        (_error) => {
           console.log("Unable to get location, using default Jakarta coordinates");
           // Default to Jakarta coordinates
           setUserLocation({ lat: -6.2088, lng: 106.8456 });
@@ -79,7 +78,7 @@ export default function DashboardPage() {
     if (userLocation) {
       fetchDonations();
     }
-  }, [userLocation]);
+  }, [userLocation, fetchDonations]);
 
   // Filter donations based on search and category
   useEffect(() => {
@@ -120,7 +119,7 @@ export default function DashboardPage() {
           successfulPickups: data.filter((d: Donation) => d.status === "completed").length,
         });
       }
-    } catch (error) {
+    } catch (_error) {
       console.log("Failed to load donations, using fallback");
       toast.error("Failed to load donations");
     } finally {
@@ -145,7 +144,7 @@ export default function DashboardPage() {
       } else {
         throw new Error("Failed to post donation");
       }
-    } catch (error) {
+    } catch (_error) {
       console.log("Failed to post donation");
       toast.error("Failed to post donation");
     }
@@ -172,7 +171,7 @@ export default function DashboardPage() {
           },
           body: JSON.stringify(requestData),
         });
-      } catch (error) {
+      } catch (_error) {
         console.log("Main API failed, using mock API");
         response = await fetch("/api/requests/mock", {
           method: "POST",
@@ -190,7 +189,7 @@ export default function DashboardPage() {
         const error = await response.json();
         toast.error(error.error || "Failed to send request");
       }
-    } catch (error) {
+    } catch (_error) {
       console.log("Failed to send request");
       toast.error("Failed to send request");
     }

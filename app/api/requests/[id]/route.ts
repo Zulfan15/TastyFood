@@ -55,7 +55,7 @@ export async function PUT(
       return NextResponse.json({ error: "Request not found" }, { status: 404 });
     }
 
-    let updateData: any = {
+    const updateData: Partial<typeof requests.$inferInsert> = {
       status: validatedData.status,
       updatedAt: new Date(),
     };

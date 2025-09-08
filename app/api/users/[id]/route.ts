@@ -36,7 +36,9 @@ export async function PUT(
 
     const updateData = {
       ...validatedData,
-      locationPoint: locationPoint as any,
+      locationPoint: validatedData.latitude && validatedData.longitude 
+        ? { x: validatedData.longitude, y: validatedData.latitude } 
+        : undefined,
       updatedAt: new Date(),
     };
 

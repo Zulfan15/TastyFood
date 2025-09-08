@@ -251,7 +251,7 @@ export default function HomePage() {
                   </div>
                   
                   <blockquote className="text-gray-600 mb-4">
-                    "{testimonial.content}"
+                    &ldquo;{testimonial.content}&rdquo;
                   </blockquote>
                   
                   <div>
