@@ -119,7 +119,7 @@ export function generateNotificationContent(
     default:
       return {
         title: "Notification",
-        message: data.message || "You have a new notification.",
+        message: (data.message as string) || "You have a new notification.",
       };
   }
 }

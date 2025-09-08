@@ -46,11 +46,10 @@ interface Donation {
 interface MapViewProps {
   userLocation: { lat: number; lng: number } | null;
   donations: Donation[];
-  onDonationSelect: (donation: Donation) => void;
   onRequestDonation: (donationId: string) => void;
 }
 
-export function MapView({ userLocation, donations, onDonationSelect, onRequestDonation }: MapViewProps) {
+export function MapView({ userLocation, donations, onRequestDonation }: MapViewProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

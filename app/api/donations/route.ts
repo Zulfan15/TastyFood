@@ -163,8 +163,6 @@ export async function POST(request: NextRequest) {
     // Get donor ID from session/auth (placeholder for now)
     const donorId = request.headers.get("x-user-id") || "placeholder-donor-id";
 
-    const locationPoint = `(${validatedData.longitude}, ${validatedData.latitude})`;
-
     const newDonation = await db.insert(donations).values({
       donorId,
       title: validatedData.title,

@@ -8,7 +8,6 @@ import {
   IconBook, 
   IconLeaf, 
   IconShield,
-  IconMapPin,
   IconUsers,
   IconChartBar,
   IconDownload,

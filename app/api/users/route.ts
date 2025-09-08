@@ -33,10 +33,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createUserSchema.parse(body);
 
-    const locationPoint = validatedData.latitude && validatedData.longitude 
-      ? `(${validatedData.longitude}, ${validatedData.latitude})` 
-      : null;
-
     const newUser = await db.insert(users).values({
       email: validatedData.email,
       name: validatedData.name,

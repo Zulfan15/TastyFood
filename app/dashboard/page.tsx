@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MapView } from "@/components/map-view";
 import { DonationForm } from "@/components/donation-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -73,6 +73,37 @@ export default function DashboardPage() {
     }
   }, []);
 
+  const fetchDonations = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      // Use mock API for development
+      const response = await fetch(
+        `/api/donations/mock?latitude=${userLocation?.lat}&longitude=${userLocation?.lng}`
+      );
+      
+      if (response.ok) {
+        const result = await response.json();
+        setDonations(result.data || []);
+        
+        // Calculate stats
+        const total = result.data?.length || 0;
+        const active = result.data?.filter((d: Donation) => d.status === 'available')?.length || 0;
+        
+        setStats({
+          totalDonations: total,
+          activeDonations: active,
+          totalUsers: new Set(result.data?.map((d: Donation) => d.donor.id) || []).size,
+          successfulPickups: result.data?.filter((d: Donation) => d.status === 'completed')?.length || 0,
+        });
+      }
+    } catch (_error) {
+      console.log("Failed to load donations, using fallback");
+      toast.error("Failed to load donations");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [userLocation]);
+
   // Fetch donations when user location is available
   useEffect(() => {
     if (userLocation) {
@@ -98,34 +129,6 @@ export default function DashboardPage() {
 
     setFilteredDonations(filtered);
   }, [donations, searchQuery, categoryFilter]);
-
-  const fetchDonations = async () => {
-    try {
-      setIsLoading(true);
-      // Use mock API for development
-      const response = await fetch(
-        `/api/donations/mock?latitude=${userLocation?.lat}&longitude=${userLocation?.lng}`
-      );
-      
-      if (response.ok) {
-        const data = await response.json();
-        setDonations(data);
-        
-        // Calculate stats
-        setStats({
-          totalDonations: data.length,
-          activeDonations: data.filter((d: Donation) => d.status === "available").length,
-          totalUsers: new Set(data.map((d: Donation) => d.donor.id)).size,
-          successfulPickups: data.filter((d: Donation) => d.status === "completed").length,
-        });
-      }
-    } catch (_error) {
-      console.log("Failed to load donations, using fallback");
-      toast.error("Failed to load donations");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleDonationSubmit = async (data: CreateDonationInput) => {
     try {
@@ -362,7 +365,6 @@ export default function DashboardPage() {
           <MapView
             userLocation={userLocation}
             donations={filteredDonations}
-            onDonationSelect={setSelectedDonation}
             onRequestDonation={handleRequestDonation}
           />
         </TabsContent>

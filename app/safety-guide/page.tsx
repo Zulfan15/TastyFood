@@ -11,8 +11,7 @@ import {
   IconAlertTriangle,
   IconCheck,
   IconX,
-  IconBox,
-  IconFlame
+  IconBox
 } from "@tabler/icons-react"
 
 const safetyGuidelines = [

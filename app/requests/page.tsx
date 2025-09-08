@@ -4,11 +4,10 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Clock, 
-  MapPin, 
   User, 
   Package, 
   MessageSquare, 
@@ -67,7 +66,7 @@ export default function RequestsPage() {
       let response;
       try {
         response = await fetch("/api/requests");
-      } catch (error) {
+      } catch (_error) {
         console.log("Main API failed, using mock API");
         response = await fetch("/api/requests/mock");
       }
@@ -76,7 +75,7 @@ export default function RequestsPage() {
         const result = await response.json();
         setRequests(result.data || []);
       }
-    } catch (error) {
+    } catch (_error) {
       console.log("Failed to load requests");
       toast.error("Failed to load requests");
     } finally {
@@ -96,7 +95,7 @@ export default function RequestsPage() {
       );
       
       toast.success(`Request ${status} successfully!`);
-    } catch (error) {
+    } catch (_error) {
       console.log("Failed to update request");
       toast.error("Failed to update request");
     }

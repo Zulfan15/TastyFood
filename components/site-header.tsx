@@ -4,8 +4,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BrandLogo } from "@/components/brand-logo";
-import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Leaf, User, Menu, LogOut, Settings, UserCircle } from "lucide-react";
+import { User, Menu, LogOut, Settings, UserCircle } from "lucide-react";
 import { useSession, signOut } from "@/lib/auth-client";
 
 export function SiteHeader() {

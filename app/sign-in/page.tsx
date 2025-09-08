@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { signIn } from "@/lib/auth-client";
 import { Loader2 } from "lucide-react";
 
 export default function SignInPage() {
@@ -33,7 +32,7 @@ export default function SignInPage() {
             } else {
                 setError("Invalid email or password. Use demo credentials.");
             }
-        } catch (err) {
+        } catch (_err) {
             setError("An unexpected error occurred");
         } finally {
             setIsLoading(false);
