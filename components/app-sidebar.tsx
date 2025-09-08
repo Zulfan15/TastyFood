@@ -12,10 +12,8 @@ import {
   IconHistory,
   IconSettings,
   IconHelp,
-  IconSearch,
   IconChartBar,
   IconBook,
-  IconGift,
   IconLeaf,
 } from "@tabler/icons-react"
 

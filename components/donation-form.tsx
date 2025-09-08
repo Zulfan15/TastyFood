@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createDonationSchema, CreateDonationInput } from "@/lib/validations";
@@ -61,7 +62,7 @@ export function DonationForm({ onSubmit, userLocation }: DonationFormProps) {
       form.reset();
       setSelectedImages([]);
       toast.success("Donation posted successfully!");
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to post donation. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -73,7 +74,7 @@ export function DonationForm({ onSubmit, userLocation }: DonationFormProps) {
     if (!files) return;
 
     // In a real app, you'd upload these to a service like uploadthing or cloudinary
-    const imageUrls = Array.from(files).map((file, index) => 
+    const imageUrls = Array.from(files).map(file => 
       URL.createObjectURL(file) // Temporary URL for demo
     );
     
@@ -209,9 +210,11 @@ export function DonationForm({ onSubmit, userLocation }: DonationFormProps) {
               <div className="flex flex-wrap gap-4">
                 {selectedImages.map((image, index) => (
                   <div key={index} className="relative">
-                    <img 
+                    <Image 
                       src={image} 
                       alt={`Preview ${index + 1}`}
+                      width={80}
+                      height={80}
                       className="w-20 h-20 object-cover rounded-lg border"
                     />
                     <Button

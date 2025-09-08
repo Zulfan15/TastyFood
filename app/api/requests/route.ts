@@ -3,8 +3,8 @@ import { db } from "@/db";
 import { requests } from "@/db/schema/requests";
 import { donations } from "@/db/schema/donations";
 import { users } from "@/db/schema/users";
-import { createRequestSchema, updateRequestSchema } from "@/lib/validations";
-import { calculatePriority, generateQRCode } from "@/lib/helpers";
+import { createRequestSchema } from "@/lib/validations";
+import { calculatePriority } from "@/lib/helpers";
 import { eq, and, sql } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
@@ -14,11 +14,11 @@ export async function GET(request: NextRequest) {
     const receiverId = searchParams.get("receiverId");
     const status = searchParams.get("status");
 
-    let whereConditions = [];
+    const whereConditions = [];
     
     if (donationId) whereConditions.push(eq(requests.donationId, donationId));
     if (receiverId) whereConditions.push(eq(requests.receiverId, receiverId));
-    if (status) whereConditions.push(eq(requests.status, status as any));
+    if (status) whereConditions.push(eq(requests.status, status as typeof requests.status.enumValues[number]));
 
     const requestsData = await db
       .select({

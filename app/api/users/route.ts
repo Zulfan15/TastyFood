@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { users } from "@/db/schema/users";
-import { createUserSchema, updateUserSchema } from "@/lib/validations";
+import { createUserSchema } from "@/lib/validations";
 import { eq } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
@@ -33,10 +33,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createUserSchema.parse(body);
 
-    const locationPoint = validatedData.latitude && validatedData.longitude 
-      ? `(${validatedData.longitude}, ${validatedData.latitude})` 
-      : null;
-
     const newUser = await db.insert(users).values({
       email: validatedData.email,
       name: validatedData.name,
@@ -44,7 +40,9 @@ export async function POST(request: NextRequest) {
       role: validatedData.role,
       userType: validatedData.userType,
       address: validatedData.address,
-      locationPoint: locationPoint as any,
+      locationPoint: validatedData.latitude && validatedData.longitude 
+        ? { x: validatedData.longitude, y: validatedData.latitude } 
+        : null,
       idCardNumber: validatedData.idCardNumber,
     }).returning();
 

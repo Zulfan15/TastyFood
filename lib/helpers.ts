@@ -83,7 +83,7 @@ export function formatDistance(distance: number): string {
  */
 export function generateNotificationContent(
   type: string,
-  data: Record<string, any>
+  data: Record<string, unknown>
 ): { title: string; message: string } {
   switch (type) {
     case "donation_request":
@@ -119,7 +119,7 @@ export function generateNotificationContent(
     default:
       return {
         title: "Notification",
-        message: data.message || "You have a new notification.",
+        message: (data.message as string) || "You have a new notification.",
       };
   }
 }

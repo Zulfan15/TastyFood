@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { IconBell, IconUser, IconMapPin, IconClock, IconCheck } from "@tabler/icons-react"
@@ -164,7 +164,7 @@ export default function NotificationsPage() {
               <IconBell className="size-12 text-content-muted mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-content-secondary mb-2">No notifications yet</h3>
               <p className="text-content-muted">
-                When you start sharing or requesting food, you'll see updates here
+                When you start sharing or requesting food, you&apos;ll see updates here
               </p>
             </CardContent>
           </Card>

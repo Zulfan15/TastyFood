@@ -35,7 +35,7 @@ export const dummyDonations = [
     quantity: 20,
     unit: "pcs",
     images: [],
-    locationPoint: "(106.8556, -6.2188)", // Slightly different coordinates
+    locationPoint: { x: 106.8556, y: -6.2188 }, // Slightly different coordinates
     address: "Jl. Thamrin No. 456, Jakarta Pusat",
     pickupTimeStart: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour from now
     pickupTimeEnd: new Date(Date.now() + 4 * 60 * 60 * 1000), // 4 hours from now
@@ -57,7 +57,7 @@ export const dummyDonations = [
     quantity: 15,
     unit: "porsi",
     images: [],
-    locationPoint: "(106.8356, -6.1988)", 
+    locationPoint: { x: 106.8356, y: -6.1988 }, 
     address: "Jl. Rasuna Said No. 789, Jakarta Selatan",
     pickupTimeStart: new Date(Date.now() + 30 * 60 * 1000), // 30 minutes from now
     pickupTimeEnd: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
@@ -80,7 +80,7 @@ export const dummyUsers = [
     role: "donor" as const,
     userType: "restaurant" as const,
     address: "Jl. Sudirman No. 123, Jakarta Pusat",
-    locationPoint: "(106.8456, -6.2088)",
+    locationPoint: { x: 106.8456, y: -6.2088 },
     verificationStatus: "verified" as const,
     trustScore: "4.8",
     totalDonations: "25",
@@ -96,7 +96,7 @@ export const dummyUsers = [
     role: "donor" as const,
     userType: "store" as const,
     address: "Jl. Thamrin No. 456, Jakarta Pusat",
-    locationPoint: "(106.8556, -6.2188)",
+    locationPoint: { x: 106.8556, y: -6.2188 },
     verificationStatus: "verified" as const,
     trustScore: "4.9",
     totalDonations: "50",
@@ -112,7 +112,7 @@ export const dummyUsers = [
     role: "donor" as const,
     userType: "restaurant" as const,
     address: "Jl. Rasuna Said No. 789, Jakarta Selatan",
-    locationPoint: "(106.8356, -6.1988)",
+    locationPoint: { x: 106.8356, y: -6.1988 },
     verificationStatus: "verified" as const,
     trustScore: "4.7",
     totalDonations: "18",

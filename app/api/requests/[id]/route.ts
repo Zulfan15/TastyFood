@@ -9,9 +9,10 @@ import { eq } from "drizzle-orm";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const requestData = await db
       .select({
         id: requests.id,
@@ -27,7 +28,7 @@ export async function GET(
         createdAt: requests.createdAt,
       })
       .from(requests)
-      .where(eq(requests.id, params.id))
+      .where(eq(requests.id, id))
       .limit(1);
 
     if (!requestData[0]) {
@@ -43,19 +44,20 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const validatedData = updateRequestSchema.parse(body);
 
     // Get current request
-    const currentRequest = await db.select().from(requests).where(eq(requests.id, params.id)).limit(1);
+    const currentRequest = await db.select().from(requests).where(eq(requests.id, id)).limit(1);
     if (!currentRequest[0]) {
       return NextResponse.json({ error: "Request not found" }, { status: 404 });
     }
 
-    let updateData: any = {
+    const updateData: Partial<typeof requests.$inferInsert> = {
       status: validatedData.status,
       updatedAt: new Date(),
     };
@@ -70,13 +72,13 @@ export async function PUT(
 
     // If request is approved, generate QR code and create transaction
     if (validatedData.status === "approved") {
-      const qrCode = generateQRCode(params.id);
+      const qrCode = generateQRCode(id);
       updateData.qrCode = qrCode;
 
       // Create transaction record
       await db.insert(transactions).values({
         donationId: currentRequest[0].donationId,
-        requestId: params.id,
+        requestId: id,
         donorId: "placeholder-donor-id", // Should get from donation
         receiverId: currentRequest[0].receiverId,
         qrCode,
@@ -93,7 +95,7 @@ export async function PUT(
     const updatedRequest = await db
       .update(requests)
       .set(updateData)
-      .where(eq(requests.id, params.id))
+      .where(eq(requests.id, id))
       .returning();
 
     return NextResponse.json(updatedRequest[0]);
@@ -105,12 +107,13 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const deletedRequest = await db
       .delete(requests)
-      .where(eq(requests.id, params.id))
+      .where(eq(requests.id, id))
       .returning();
 
     if (!deletedRequest[0]) {

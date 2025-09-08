@@ -57,7 +57,7 @@ export default function SignUpPage() {
                     });
                     setIsGettingLocation(false);
                 },
-                (error) => {
+                (_error) => {
                     setError("Unable to get your location. Please enter manually.");
                     setIsGettingLocation(false);
                 }
@@ -97,7 +97,7 @@ export default function SignUpPage() {
                 router.push("/sign-in");
             }, 2000);
             
-        } catch (err) {
+        } catch (_err) {
             setError("An unexpected error occurred");
         } finally {
             setIsLoading(false);
